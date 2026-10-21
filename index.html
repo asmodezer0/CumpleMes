@@ -76,12 +76,45 @@
         </p>
       </div>
 
+      <!-- Panel privado para subir fotos al repositorio de GitHub. -->
+      <aside class="editor-tools reveal" aria-labelledby="editor-title">
+        <div class="editor-tools-copy">
+          <p class="memory-date">Modo edición</p>
+          <h3 id="editor-title">Actualiza nuestros recuerdos</h3>
+          <p>
+            Activa la edición con un token de GitHub y aparecerán botones para cambiar
+            cada foto. La imagen se guardará en este repositorio para que todos puedan verla.
+          </p>
+        </div>
+        <form class="editor-form" id="editor-form">
+          <label class="token-field" for="github-token">
+            <span>Token de edición</span>
+            <input
+              id="github-token"
+              name="github-token"
+              type="password"
+              autocomplete="off"
+              placeholder="ghp_..."
+              required
+            />
+          </label>
+          <button class="editor-button" type="submit">Activar edición</button>
+        </form>
+        <p class="editor-status" id="editor-status" aria-live="polite"></p>
+      </aside>
+
       <div class="timeline">
         <!-- Recuerdo 1: reemplaza foto-01.jpg por tu imagen local -->
         <article class="timeline-item reveal">
           <div class="timeline-dot" aria-hidden="true">01</div>
           <div class="memory-card">
-            <img src="foto-01.jpg" alt="Nuestra primera salida por Asunción" />
+            <div class="memory-media">
+              <img src="foto-01.jpg" alt="Nuestra primera salida por Asunción" data-memory-id="1" />
+              <label class="photo-upload">
+                <span>Cambiar foto</span>
+                <input type="file" accept="image/*" data-upload-input="1" />
+              </label>
+            </div>
             <div class="memory-card-body">
               <p class="memory-date">El comienzo</p>
               <h3>Nuestra primera salida por Asunción</h3>
@@ -97,7 +130,13 @@
         <article class="timeline-item reveal">
           <div class="timeline-dot" aria-hidden="true">02</div>
           <div class="memory-card">
-            <img src="foto-02.jpg" alt="Aquella noche en la multitud" />
+            <div class="memory-media">
+              <img src="foto-02.jpg" alt="Aquella noche en la multitud" data-memory-id="2" />
+              <label class="photo-upload">
+                <span>Cambiar foto</span>
+                <input type="file" accept="image/*" data-upload-input="2" />
+              </label>
+            </div>
             <div class="memory-card-body">
               <p class="memory-date">Una noche especial</p>
               <h3>Aquella noche en la multitud</h3>
@@ -113,7 +152,13 @@
         <article class="timeline-item reveal">
           <div class="timeline-dot" aria-hidden="true">03</div>
           <div class="memory-card">
-            <img src="foto-03.jpg" alt="Una tarde de risas juntos" />
+            <div class="memory-media">
+              <img src="foto-03.jpg" alt="Una tarde de risas juntos" data-memory-id="3" />
+              <label class="photo-upload">
+                <span>Cambiar foto</span>
+                <input type="file" accept="image/*" data-upload-input="3" />
+              </label>
+            </div>
             <div class="memory-card-body">
               <p class="memory-date">De esas tardes</p>
               <h3>Risas que se quedan</h3>
@@ -129,7 +174,13 @@
         <article class="timeline-item reveal">
           <div class="timeline-dot" aria-hidden="true">04</div>
           <div class="memory-card">
-            <img src="foto-04.jpg" alt="Un momento tranquilo compartido" />
+            <div class="memory-media">
+              <img src="foto-04.jpg" alt="Un momento tranquilo compartido" data-memory-id="4" />
+              <label class="photo-upload">
+                <span>Cambiar foto</span>
+                <input type="file" accept="image/*" data-upload-input="4" />
+              </label>
+            </div>
             <div class="memory-card-body">
               <p class="memory-date">Nuestro lugar seguro</p>
               <h3>Los silencios cómodos</h3>
@@ -145,7 +196,13 @@
         <article class="timeline-item reveal">
           <div class="timeline-dot" aria-hidden="true">05</div>
           <div class="memory-card">
-            <img src="foto-05.jpg" alt="Celebrando nuestros cinco meses" />
+            <div class="memory-media">
+              <img src="foto-05.jpg" alt="Celebrando nuestros cinco meses" data-memory-id="5" />
+              <label class="photo-upload">
+                <span>Cambiar foto</span>
+                <input type="file" accept="image/*" data-upload-input="5" />
+              </label>
+            </div>
             <div class="memory-card-body">
               <p class="memory-date">Hoy</p>
               <h3>Felices 5 meses, mi amor</h3>
