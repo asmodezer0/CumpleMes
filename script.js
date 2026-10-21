@@ -100,14 +100,29 @@ async function compressImage(file) {
   return blob;
 }
 
-function openPhotoPicker(event) {
-  const memoryId = event.currentTarget.dataset.uploadButton;
-  const input = document.querySelector(`[data-upload-input="${memoryId}"]`);
-  input?.click();
-}
-
 function getPublicImageUrl(imagePath) {
   return `${SUPABASE_STORAGE_URL}/object/public/${SUPABASE_BUCKET}/${imagePath}`;
+}
+
+// Recupera las fotos que ya fueron guardadas para que aparezcan también
+// después de recargar la página o desde otro dispositivo.
+function loadStoredImages() {
+  document.querySelectorAll("[data-memory-id]").forEach((image) => {
+    const memoryId = image.dataset.memoryId;
+    const originalSource = image.getAttribute("src");
+    const storedSource = `${getPublicImageUrl(`recuerdo-${memoryId}.jpg`)}?v=${Date.now()}`;
+
+    image.addEventListener(
+      "error",
+      () => {
+        // Si todavía no existe una foto en Supabase, conserva la imagen de ejemplo.
+        if (image.src === storedSource) image.src = originalSource;
+      },
+      { once: true }
+    );
+
+    image.src = storedSource;
+  });
 }
 
 async function uploadMemoryImage(event) {
@@ -154,12 +169,10 @@ async function uploadMemoryImage(event) {
   }
 }
 
-document.querySelectorAll("[data-upload-button]").forEach((button) => {
-  button.addEventListener("click", openPhotoPicker);
-});
 document.querySelectorAll("[data-upload-input]").forEach((input) => {
   input.addEventListener("change", uploadMemoryImage);
 });
+loadStoredImages();
 
 // =========================================================
 // Apariciones al hacer scroll y pequeños detalles de la página
