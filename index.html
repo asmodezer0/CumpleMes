@@ -76,32 +76,9 @@
         </p>
       </div>
 
-      <!-- Panel privado para subir fotos al repositorio de GitHub. -->
-      <aside class="editor-tools reveal" aria-labelledby="editor-title">
-        <div class="editor-tools-copy">
-          <p class="memory-date">Modo edición</p>
-          <h3 id="editor-title">Actualiza nuestros recuerdos</h3>
-          <p>
-            Activa la edición con un token de GitHub y aparecerán botones para cambiar
-            cada foto. La imagen se guardará en este repositorio para que todos puedan verla.
-          </p>
-        </div>
-        <form class="editor-form" id="editor-form">
-          <label class="token-field" for="github-token">
-            <span>Token de edición</span>
-            <input
-              id="github-token"
-              name="github-token"
-              type="password"
-              autocomplete="off"
-              placeholder="ghp_..."
-              required
-            />
-          </label>
-          <button class="editor-button" type="submit">Activar edición</button>
-        </form>
-        <p class="editor-status" id="editor-status" aria-live="polite"></p>
-      </aside>
+      <p class="photo-status reveal" id="photo-status" aria-live="polite">
+        Toca el pequeño botón de cada foto para cambiarla.
+      </p>
 
       <div class="timeline">
         <!-- Recuerdo 1: reemplaza foto-01.jpg por tu imagen local -->
@@ -110,10 +87,8 @@
           <div class="memory-card">
             <div class="memory-media">
               <img src="foto-01.jpg" alt="Nuestra primera salida por Asunción" data-memory-id="1" />
-              <label class="photo-upload">
-                <span>Cambiar foto</span>
-                <input type="file" accept="image/*" data-upload-input="1" />
-              </label>
+              <button class="photo-upload" type="button" data-upload-button="1" aria-label="Cambiar foto del recuerdo 1">✎</button>
+              <input class="photo-file-input" type="file" accept="image/*" data-upload-input="1" />
             </div>
             <div class="memory-card-body">
               <p class="memory-date">El comienzo</p>
@@ -132,10 +107,8 @@
           <div class="memory-card">
             <div class="memory-media">
               <img src="foto-02.jpg" alt="Aquella noche en la multitud" data-memory-id="2" />
-              <label class="photo-upload">
-                <span>Cambiar foto</span>
-                <input type="file" accept="image/*" data-upload-input="2" />
-              </label>
+              <button class="photo-upload" type="button" data-upload-button="2" aria-label="Cambiar foto del recuerdo 2">✎</button>
+              <input class="photo-file-input" type="file" accept="image/*" data-upload-input="2" />
             </div>
             <div class="memory-card-body">
               <p class="memory-date">Una noche especial</p>
@@ -154,10 +127,8 @@
           <div class="memory-card">
             <div class="memory-media">
               <img src="foto-03.jpg" alt="Una tarde de risas juntos" data-memory-id="3" />
-              <label class="photo-upload">
-                <span>Cambiar foto</span>
-                <input type="file" accept="image/*" data-upload-input="3" />
-              </label>
+              <button class="photo-upload" type="button" data-upload-button="3" aria-label="Cambiar foto del recuerdo 3">✎</button>
+              <input class="photo-file-input" type="file" accept="image/*" data-upload-input="3" />
             </div>
             <div class="memory-card-body">
               <p class="memory-date">De esas tardes</p>
@@ -176,10 +147,8 @@
           <div class="memory-card">
             <div class="memory-media">
               <img src="foto-04.jpg" alt="Un momento tranquilo compartido" data-memory-id="4" />
-              <label class="photo-upload">
-                <span>Cambiar foto</span>
-                <input type="file" accept="image/*" data-upload-input="4" />
-              </label>
+              <button class="photo-upload" type="button" data-upload-button="4" aria-label="Cambiar foto del recuerdo 4">✎</button>
+              <input class="photo-file-input" type="file" accept="image/*" data-upload-input="4" />
             </div>
             <div class="memory-card-body">
               <p class="memory-date">Nuestro lugar seguro</p>
@@ -198,10 +167,8 @@
           <div class="memory-card">
             <div class="memory-media">
               <img src="foto-05.jpg" alt="Celebrando nuestros cinco meses" data-memory-id="5" />
-              <label class="photo-upload">
-                <span>Cambiar foto</span>
-                <input type="file" accept="image/*" data-upload-input="5" />
-              </label>
+              <button class="photo-upload" type="button" data-upload-button="5" aria-label="Cambiar foto del recuerdo 5">✎</button>
+              <input class="photo-file-input" type="file" accept="image/*" data-upload-input="5" />
             </div>
             <div class="memory-card-body">
               <p class="memory-date">Hoy</p>
