@@ -1,5 +1,5 @@
 /* =========================================================
-   Felices 5 meses - contador, animaciones y editor de fotos
+   Felices 5 meses - contador, animaciones y fotos con Supabase
    ========================================================= */
 
 // Fecha de inicio: 21 de junio de 2026 a las 00:00 (hora local del dispositivo).
@@ -57,102 +57,21 @@ updateCounter();
 window.setInterval(updateCounter, 1000);
 
 // =========================================================
-// Editor persistente usando GitHub Contents API
+// Fotos persistentes usando Supabase Storage
 // =========================================================
 
-// El token se introduce en la página y permanece solo en memoria.
-// Nunca lo guardamos en el repositorio, localStorage ni sessionStorage.
-const GITHUB_REPOSITORY = "asmodezer0/CumpleMes";
-const GITHUB_BRANCH = "main";
-const GITHUB_API_BASE = "https://api.github.com";
-const GITHUB_PAGES_BASE = "https://asmodezer0.github.io/CumpleMes";
-const IMAGE_MANIFEST_PATH = "images.json";
-const RAW_MANIFEST_URL =
-  "https://raw.githubusercontent.com/asmodezer0/CumpleMes/main/images.json";
-
-let githubToken = "";
+const SUPABASE_URL = "https://anaqfwlrkwibjufrbwup.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_dwrd7upQDa_t8TPMfcURZg_1ZImCzmy";
+const SUPABASE_BUCKET = "memory-images";
+const SUPABASE_STORAGE_URL = `${SUPABASE_URL}/storage/v1`;
 
 const photoStatus = document.querySelector("#photo-status");
-const memoryImages = [...document.querySelectorAll("[data-memory-id]")];
 
 function setPhotoStatus(message, type = "") {
   if (!photoStatus) return;
   photoStatus.textContent = message;
   photoStatus.className = `photo-status ${type}`.trim();
-}
-
-function githubHeaders() {
-  return {
-    Accept: "application/vnd.github+json",
-    Authorization: `Bearer ${githubToken}`,
-    "X-GitHub-Api-Version": "2022-11-28",
-  };
-}
-
-function githubFileUrl(path) {
-  return `${GITHUB_API_BASE}/repos/${GITHUB_REPOSITORY}/contents/${path}`;
-}
-
-async function getGitHubFile(path) {
-  const response = await fetch(
-    `${githubFileUrl(path)}?ref=${encodeURIComponent(GITHUB_BRANCH)}`,
-    { headers: githubHeaders() }
-  );
-
-  if (response.status === 404) return null;
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "No se pudo consultar GitHub.");
-  }
-
-  return response.json();
-}
-
-async function upsertGitHubFile(path, base64Content, message) {
-  const currentFile = await getGitHubFile(path);
-  const body = {
-    message,
-    content: base64Content,
-    branch: GITHUB_BRANCH,
-  };
-
-  if (currentFile?.sha) body.sha = currentFile.sha;
-
-  const response = await fetch(githubFileUrl(path), {
-    method: "PUT",
-    headers: { ...githubHeaders(), "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "GitHub rechazó la subida.");
-  }
-
-  return response.json();
-}
-
-function encodeBase64Utf8(value) {
-  const bytes = new TextEncoder().encode(value);
-  let binary = "";
-  bytes.forEach((byte) => (binary += String.fromCharCode(byte)));
-  return btoa(binary);
-}
-
-function decodeBase64Utf8(value) {
-  const cleanValue = value.replace(/\s/g, "");
-  const binary = atob(cleanValue);
-  const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
-}
-
-function blobToBase64(blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result).split(",")[1]);
-    reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
-    reader.readAsDataURL(blob);
-  });
 }
 
 // Reduce el tamaño de la foto para que la subida sea rápida y segura.
@@ -178,57 +97,17 @@ async function compressImage(file) {
   );
 
   if (!blob) throw new Error("No se pudo preparar la imagen.");
-  return blobToBase64(blob);
-}
-
-function askForGitHubToken() {
-  const candidateToken = window.prompt(
-    "Para guardar esta foto para todos, pega un token Fine-grained de GitHub con acceso Contents Read and write únicamente al repositorio CumpleMes. No lo compartas."
-  );
-
-  if (!candidateToken?.trim()) {
-    setPhotoStatus("No se subió ninguna foto.", "error");
-    return false;
-  }
-
-  githubToken = candidateToken.trim();
-  return true;
-}
-
-async function verifyGitHubAccess() {
-  const response = await fetch(
-    `${GITHUB_API_BASE}/repos/${GITHUB_REPOSITORY}`,
-    { headers: githubHeaders() }
-  );
-
-  if (!response.ok) {
-    githubToken = "";
-    throw new Error("El token no tiene acceso al repositorio CumpleMes.");
-  }
+  return blob;
 }
 
 function openPhotoPicker(event) {
   const memoryId = event.currentTarget.dataset.uploadButton;
-  if (!githubToken && !askForGitHubToken()) return;
-
   const input = document.querySelector(`[data-upload-input="${memoryId}"]`);
   input?.click();
 }
 
-async function updateManifest(memoryId, imagePath) {
-  const currentManifest = await getGitHubFile(IMAGE_MANIFEST_PATH);
-  let manifest = {};
-
-  if (currentManifest?.content) {
-    manifest = JSON.parse(decodeBase64Utf8(currentManifest.content));
-  }
-
-  manifest[String(memoryId)] = imagePath;
-  await upsertGitHubFile(
-    IMAGE_MANIFEST_PATH,
-    encodeBase64Utf8(`${JSON.stringify(manifest, null, 2)}\n`),
-    `Update memory image manifest ${memoryId}`
-  );
+function getPublicImageUrl(imagePath) {
+  return `${SUPABASE_STORAGE_URL}/object/public/${SUPABASE_BUCKET}/${imagePath}`;
 }
 
 async function uploadMemoryImage(event) {
@@ -237,29 +116,35 @@ async function uploadMemoryImage(event) {
   const file = input.files?.[0];
 
   if (!file) return;
-  if (!githubToken) {
-    setPhotoStatus("Pulsa el botón de la foto para activar la subida.", "error");
-    input.value = "";
-    return;
-  }
 
   try {
-    setPhotoStatus("Comprobando acceso y preparando la foto…");
-    await verifyGitHubAccess();
-    const base64Image = await compressImage(file);
-    const imagePath = `images/recuerdo-${memoryId}.jpg`;
-
-    await upsertGitHubFile(
-      imagePath,
-      base64Image,
-      `Update memory image ${memoryId}`
+    setPhotoStatus("Preparando y guardando la foto…");
+    const imageBlob = await compressImage(file);
+    const imagePath = `recuerdo-${memoryId}.jpg`;
+    const response = await fetch(
+      `${SUPABASE_STORAGE_URL}/object/${SUPABASE_BUCKET}/${imagePath}`,
+      {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+          "Content-Type": "image/jpeg",
+          "x-upsert": "true",
+          "cache-control": "3600",
+        },
+        body: imageBlob,
+      }
     );
-    await updateManifest(memoryId, imagePath);
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || "Supabase rechazó la subida.");
+    }
 
     const image = document.querySelector(`[data-memory-id="${memoryId}"]`);
-    if (image) image.src = `${GITHUB_PAGES_BASE}/${imagePath}?v=${Date.now()}`;
+    if (image) image.src = `${getPublicImageUrl(imagePath)}?v=${Date.now()}`;
     setPhotoStatus(
-      "Foto guardada. GitHub Pages la publicará para todos en unos segundos.",
+      "Foto guardada. Ya está disponible para todos los dispositivos.",
       "success"
     );
   } catch (error) {
@@ -269,30 +154,12 @@ async function uploadMemoryImage(event) {
   }
 }
 
-async function loadImageManifest() {
-  try {
-    const response = await fetch(`${RAW_MANIFEST_URL}?v=${Date.now()}`);
-    if (!response.ok) return;
-    const manifest = await response.json();
-
-    Object.entries(manifest).forEach(([memoryId, imagePath]) => {
-      const image = document.querySelector(`[data-memory-id="${memoryId}"]`);
-      if (image && imagePath && !imagePath.startsWith("foto-")) {
-        image.src = `${GITHUB_PAGES_BASE}/${imagePath}?v=${Date.now()}`;
-      }
-    });
-  } catch {
-    // Si el manifiesto no está disponible, se mantienen las rutas de ejemplo.
-  }
-}
-
 document.querySelectorAll("[data-upload-button]").forEach((button) => {
   button.addEventListener("click", openPhotoPicker);
 });
 document.querySelectorAll("[data-upload-input]").forEach((input) => {
   input.addEventListener("change", uploadMemoryImage);
 });
-loadImageManifest();
 
 // =========================================================
 // Apariciones al hacer scroll y pequeños detalles de la página
