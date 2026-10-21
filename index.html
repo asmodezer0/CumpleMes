@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fff8f2" />
+  <meta
+    name="description"
+    content="Un pequeño rincón para celebrar nuestros primeros cinco meses juntos."
+  />
+  <title>Felices 5 meses, Amore</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <main>
+    <!-- Hero principal -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-decoration hero-decoration--one" aria-hidden="true">✦</div>
+      <div class="hero-decoration hero-decoration--two" aria-hidden="true">♡</div>
+
+      <div class="hero-content">
+        <p class="eyebrow">Un pedacito de nuestra historia</p>
+        <h1 id="hero-title">Felices 5 meses, <em>Amore</em></h1>
+        <p class="hero-intro">
+          Cada día contigo convierte lo cotidiano en un recuerdo bonito.
+          Gracias por estos meses y por todos los que todavía nos esperan.
+        </p>
+
+        <!-- El contador se actualiza desde script.js -->
+        <div class="counter" id="love-counter" role="timer" aria-label="Tiempo juntos">
+          <div class="counter-item">
+            <span class="counter-number" id="months">0</span>
+            <span class="counter-label">meses</span>
+          </div>
+          <span class="counter-separator" aria-hidden="true">·</span>
+          <div class="counter-item">
+            <span class="counter-number" id="days">0</span>
+            <span class="counter-label">días</span>
+          </div>
+          <span class="counter-separator" aria-hidden="true">·</span>
+          <div class="counter-item">
+            <span class="counter-number" id="hours">0</span>
+            <span class="counter-label">horas</span>
+          </div>
+          <span class="counter-separator" aria-hidden="true">·</span>
+          <div class="counter-item">
+            <span class="counter-number" id="minutes">0</span>
+            <span class="counter-label">minutos</span>
+          </div>
+          <span class="counter-separator" aria-hidden="true">·</span>
+          <div class="counter-item">
+            <span class="counter-number" id="seconds">0</span>
+            <span class="counter-label">segundos</span>
+          </div>
+        </div>
+
+        <p class="start-date">
+          Desde el <time datetime="2026-06-21">21 de junio de 2026</time>
+        </p>
+
+        <a class="scroll-link" href="#recuerdos">
+          Ver nuestros recuerdos <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Línea de tiempo de recuerdos -->
+    <section class="memories-section" id="recuerdos" aria-labelledby="memories-title">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Capítulos que guardo en el corazón</p>
+        <h2 id="memories-title">Nuestra pequeña línea de tiempo</h2>
+        <p>
+          Estos son algunos momentos que hacen que nuestra historia sea tan nuestra.
+          Puedes reemplazar las imágenes y los textos por sus recuerdos reales.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <!-- Recuerdo 1: reemplaza foto-01.jpg por tu imagen local -->
+        <article class="timeline-item reveal">
+          <div class="timeline-dot" aria-hidden="true">01</div>
+          <div class="memory-card">
+            <img src="foto-01.jpg" alt="Nuestra primera salida por Asunción" />
+            <div class="memory-card-body">
+              <p class="memory-date">El comienzo</p>
+              <h3>Nuestra primera salida por Asunción</h3>
+              <p>
+                Ese día descubrimos que caminar sin apuro y conversar de todo podía
+                sentirse como el plan perfecto.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Recuerdo 2: reemplaza foto-02.jpg por tu imagen local -->
+        <article class="timeline-item reveal">
+          <div class="timeline-dot" aria-hidden="true">02</div>
+          <div class="memory-card">
+            <img src="foto-02.jpg" alt="Aquella noche en la multitud" />
+            <div class="memory-card-body">
+              <p class="memory-date">Una noche especial</p>
+              <h3>Aquella noche en la multitud</h3>
+              <p>
+                Entre tantas personas, encontrar tu mano fue la forma más bonita de
+                recordar que siempre quiero estar cerca de ti.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Recuerdo 3: reemplaza foto-03.jpg por tu imagen local -->
+        <article class="timeline-item reveal">
+          <div class="timeline-dot" aria-hidden="true">03</div>
+          <div class="memory-card">
+            <img src="foto-03.jpg" alt="Una tarde de risas juntos" />
+            <div class="memory-card-body">
+              <p class="memory-date">De esas tardes</p>
+              <h3>Risas que se quedan</h3>
+              <p>
+                No hacía falta un lugar extraordinario: contigo, hasta una tarde
+                sencilla termina siendo una de mis favoritas.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Recuerdo 4: reemplaza foto-04.jpg por tu imagen local -->
+        <article class="timeline-item reveal">
+          <div class="timeline-dot" aria-hidden="true">04</div>
+          <div class="memory-card">
+            <img src="foto-04.jpg" alt="Un momento tranquilo compartido" />
+            <div class="memory-card-body">
+              <p class="memory-date">Nuestro lugar seguro</p>
+              <h3>Los silencios cómodos</h3>
+              <p>
+                También amo esos momentos en los que no necesitamos decir mucho para
+                sentir que estamos exactamente donde queremos estar.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Recuerdo 5: reemplaza foto-05.jpg por tu imagen local -->
+        <article class="timeline-item reveal">
+          <div class="timeline-dot" aria-hidden="true">05</div>
+          <div class="memory-card">
+            <img src="foto-05.jpg" alt="Celebrando nuestros cinco meses" />
+            <div class="memory-card-body">
+              <p class="memory-date">Hoy</p>
+              <h3>Felices 5 meses, mi amor</h3>
+              <p>
+                Gracias por ser tú, por lo que construimos y por hacer que cada nuevo
+                capítulo tenga ganas de ser vivido.
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Cierre de la página -->
+    <section class="closing-note reveal" aria-label="Mensaje final">
+      <span class="closing-heart" aria-hidden="true">♥</span>
+      <p>Te elegiría otra vez, en todos los tiempos.</p>
+      <span class="closing-heart" aria-hidden="true">♥</span>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Hecho con amor · <span id="current-year"></span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
