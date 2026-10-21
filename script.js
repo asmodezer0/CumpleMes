@@ -72,15 +72,13 @@ const RAW_MANIFEST_URL =
 
 let githubToken = "";
 
-const editorForm = document.querySelector("#editor-form");
-const tokenInput = document.querySelector("#github-token");
-const editorStatus = document.querySelector("#editor-status");
+const photoStatus = document.querySelector("#photo-status");
 const memoryImages = [...document.querySelectorAll("[data-memory-id]")];
 
-function setEditorStatus(message, type = "") {
-  if (!editorStatus) return;
-  editorStatus.textContent = message;
-  editorStatus.className = `editor-status ${type}`.trim();
+function setPhotoStatus(message, type = "") {
+  if (!photoStatus) return;
+  photoStatus.textContent = message;
+  photoStatus.className = `photo-status ${type}`.trim();
 }
 
 function githubHeaders() {
@@ -183,36 +181,38 @@ async function compressImage(file) {
   return blobToBase64(blob);
 }
 
-async function activateEditor(event) {
-  event.preventDefault();
-  const candidateToken = tokenInput?.value.trim();
+function askForGitHubToken() {
+  const candidateToken = window.prompt(
+    "Para guardar esta foto para todos, pega un token Fine-grained de GitHub con acceso Contents Read and write únicamente al repositorio CumpleMes. No lo compartas."
+  );
 
-  if (!candidateToken) {
-    setEditorStatus("Introduce tu token de GitHub para activar la edición.", "error");
-    return;
+  if (!candidateToken?.trim()) {
+    setPhotoStatus("No se subió ninguna foto.", "error");
+    return false;
   }
 
-  githubToken = candidateToken;
-  setEditorStatus("Comprobando acceso al repositorio…");
+  githubToken = candidateToken.trim();
+  return true;
+}
 
-  try {
-    const response = await fetch(
-      `${GITHUB_API_BASE}/repos/${GITHUB_REPOSITORY}`,
-      { headers: githubHeaders() }
-    );
+async function verifyGitHubAccess() {
+  const response = await fetch(
+    `${GITHUB_API_BASE}/repos/${GITHUB_REPOSITORY}`,
+    { headers: githubHeaders() }
+  );
 
-    if (!response.ok) throw new Error("El token no tiene acceso a este repositorio.");
-
-    document.body.classList.add("editor-enabled");
-    if (tokenInput) tokenInput.value = "";
-    setEditorStatus(
-      "Edición activada. Ahora puedes elegir una foto en cualquiera de los recuerdos.",
-      "success"
-    );
-  } catch (error) {
+  if (!response.ok) {
     githubToken = "";
-    setEditorStatus(error.message, "error");
+    throw new Error("El token no tiene acceso al repositorio CumpleMes.");
   }
+}
+
+function openPhotoPicker(event) {
+  const memoryId = event.currentTarget.dataset.uploadButton;
+  if (!githubToken && !askForGitHubToken()) return;
+
+  const input = document.querySelector(`[data-upload-input="${memoryId}"]`);
+  input?.click();
 }
 
 async function updateManifest(memoryId, imagePath) {
@@ -238,13 +238,14 @@ async function uploadMemoryImage(event) {
 
   if (!file) return;
   if (!githubToken) {
-    setEditorStatus("Activa primero el modo edición.", "error");
+    setPhotoStatus("Pulsa el botón de la foto para activar la subida.", "error");
     input.value = "";
     return;
   }
 
   try {
-    setEditorStatus("Preparando y subiendo la foto…");
+    setPhotoStatus("Comprobando acceso y preparando la foto…");
+    await verifyGitHubAccess();
     const base64Image = await compressImage(file);
     const imagePath = `images/recuerdo-${memoryId}.jpg`;
 
@@ -257,12 +258,12 @@ async function uploadMemoryImage(event) {
 
     const image = document.querySelector(`[data-memory-id="${memoryId}"]`);
     if (image) image.src = `${GITHUB_PAGES_BASE}/${imagePath}?v=${Date.now()}`;
-    setEditorStatus(
+    setPhotoStatus(
       "Foto guardada. GitHub Pages la publicará para todos en unos segundos.",
       "success"
     );
   } catch (error) {
-    setEditorStatus(`No se pudo guardar la foto: ${error.message}`, "error");
+    setPhotoStatus(`No se pudo guardar la foto: ${error.message}`, "error");
   } finally {
     input.value = "";
   }
@@ -285,7 +286,9 @@ async function loadImageManifest() {
   }
 }
 
-editorForm?.addEventListener("submit", activateEditor);
+document.querySelectorAll("[data-upload-button]").forEach((button) => {
+  button.addEventListener("click", openPhotoPicker);
+});
 document.querySelectorAll("[data-upload-input]").forEach((input) => {
   input.addEventListener("change", uploadMemoryImage);
 });
