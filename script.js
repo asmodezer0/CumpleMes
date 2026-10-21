@@ -13,6 +13,11 @@ const counterElements = {
   seconds: document.querySelector("#seconds"),
 };
 
+const dynamicMonthElements = [
+  document.querySelector("#title-months"),
+  document.querySelector("#memory-months"),
+].filter(Boolean);
+
 /** Calcula meses completos y el tiempo restante desde una fecha de inicio. */
 function getElapsedTime(from, to) {
   let months =
@@ -51,6 +56,11 @@ function updateCounter() {
   Object.entries(elapsed).forEach(([unit, value]) => {
     if (counterElements[unit]) counterElements[unit].textContent = value;
   });
+
+  dynamicMonthElements.forEach((element) => {
+    element.textContent = elapsed.months;
+  });
+  document.title = `Felices ${elapsed.months} meses, Amore`;
 }
 
 updateCounter();
